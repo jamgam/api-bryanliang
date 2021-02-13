@@ -17,12 +17,11 @@ app.get('/', (req, res) => res.send({name: 'api.bryanliang.me', version: '1.0.0'
 
 app.use('/graphQl', (req, res, next) => {
   const { query, verificationHash } = req.body
-  const isDevMode = process.env.NODE_ENV === 'development' 
   const correctHash = hash({query, key: process.env.SECRET_KEY})
-  if (verificationHash === correctHash || isDevMode) {
+  if (verificationHash === correctHash) {
     next()
   } else {
-    isDevMode && console.log('HASH MISMATCH', verificationHash, correctHash)
+    console.log('HASH MISMATCH', verificationHash, correctHash)
     res.sendStatus(401)
   }
 })
