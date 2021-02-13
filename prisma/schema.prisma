@@ -1,0 +1,18 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Score {
+  id Int @default(autoincrement()) @id
+  score Int
+  duration Float
+  username String
+  date DateTime @default(now())
+
+  @@index(fields: [score])
+}
