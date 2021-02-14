@@ -3,11 +3,70 @@ import cors from 'cors'
 import express from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import schema from './lib/schema'
-import root from './lib/root'
+// import root from './lib/root'
 import hash from 'object-hash'
+import fetch from 'node-fetch'
 
 const app = express()
 const PORT = process.env.PORT || 3000
+
+
+const config = {
+  headers: {
+    'Hasura-Client-Name': 'api-bryanliang-console',
+    'Content-Type': 'application/json',
+    'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET
+  },
+}
+
+const graphql = async (query) => {
+  const response = await fetch(process.env.HGE_ENDPOINT + '/graphql', {
+    method: 'post',
+    body:    JSON.stringify({query}),
+    ...config,
+  })
+  const jsonResp = await response.json()
+  return jsonResp?.data
+}
+
+const rootValue = {
+  getHighscores: async () => {
+    const { Score } = await graphql(`query {
+      Score(limit: 10, order_by: {score: desc}) {
+        date
+        duration
+        id
+        score
+        username
+      }
+    }`)
+    return Score
+  },
+  createScore: async ({duration, score, username}) => {
+    const { insert_Score_one } = await graphql(`mutation {
+      insert_Score_one(object: {duration: ${duration}, score: ${score}, username: "${username}"}) {
+        id
+        score
+        username
+        duration
+        date
+      }
+    }`)
+    return insert_Score_one
+  },
+  updateScore: async ({id, username}) => {
+    const { update_Score_by_pk } = await graphql(`mutation {
+      update_Score_by_pk(pk_columns: {id: ${id}}, _set: {username: "${username}"}) {
+        id
+        date
+        duration
+        score
+        username
+      }
+    }`)
+    return update_Score_by_pk
+  }
+}
 
 app.use(cors())
 app.use(express.json())
@@ -29,7 +88,7 @@ app.get('/', (req, res) => res.send({name: 'api.bryanliang.me', version: '1.0.0'
 app.use(
   '/graphQl',
   graphqlHTTP({
-    rootValue: root,
+    rootValue,
     schema,
     graphiql: process.env.NODE_ENV === 'development',
   })
