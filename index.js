@@ -1,11 +1,11 @@
-import dotenv from 'dotenv'
-import cors from 'cors'
-import express from 'express'
-import { graphqlHTTP } from 'express-graphql'
-import schema from './lib/schema'
-// import root from './lib/root'
-import hash from 'object-hash'
-import fetch from 'node-fetch'
+const dotenv = require('dotenv')
+const cors = require('cors')
+const express = require('express')
+const { graphqlHTTP } = require('express-graphql')
+const schema = require('./lib/schema')
+// const root = require('./lib/root')
+const hash = require('object-hash')
+const fetch = require('node-fetch')
 
 const app = express()
 const PORT = process.env.PORT || 3000
