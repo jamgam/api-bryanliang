@@ -3,7 +3,7 @@ import cors from 'cors'
 import express from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import schema from './lib/schema'
-import rootValue from './lib/rootValue'
+import rootValue from './lib/rootValue.js'
 import hash from 'object-hash'
 
 const app = express()
