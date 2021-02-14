@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "v14.15.1"
+  },
   "scripts": {
     "start": "node index.js"
   },
