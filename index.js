@@ -13,7 +13,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/', (req, res) => res.send({name: 'api.bryanliang.me', version: '1.0.0', mode: process.env.NODE_ENV, }));
+app.get('/', (req, res) => res.send({name: 'api.bryanliang.me', version: '1.0.0', mode: process.env.NODE_ENV, test }));
 
 // app.use('/graphQl', (req, res, next) => {
 //   const { query, verificationHash } = req.body
